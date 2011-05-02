@@ -30,25 +30,53 @@ package geotag.core;
 import android.location.Location;
 
 public class Point3D {
-	public double x;
-	public double y;
-	public double z;
+	public double lat;
+	public double lng;
+	public double alt;
 	
 	public Point3D(double d, double e, double f){
-		x = d;
-		y = e;
-		z = f;
+		lat = d;
+		lng = e;
+		alt = f;
 	}
 	
 	public Point3D(double coordinates[]){
-		x = coordinates[0];
-		y = coordinates[1];
-		z = coordinates[2];
+		lat = coordinates[0];
+		lng = coordinates[1];
+		alt = coordinates[2];
 	}
 	
 	public Point3D(Location location){
-		x = location.getLatitude();
-		y = location.getLongitude();
-		z = location.getAltitude();
+		lat = location.getLatitude();
+		lng = location.getLongitude();
+		alt = location.getAltitude();
+	}
+	
+//	private void calculateWorldVector(){
+//		double radius = 6371000.785 + alt;
+//		
+//		x = (double) (radius * Math.cos(lat) * Math.cos(lng));
+//		y = (double) (radius * Math.cos(lat) * Math.sin(lng));
+//		z = (double) (radius * Math.sin(lat));
+//	}
+	
+	public Point3DCart getVectorFromMeTo(Location destination){
+		double radius = 6371000.785;
+		
+		double x = (destination.getLatitude() - lat) * radius * Math.PI / 180;
+		double y = (destination.getLongitude() - lng) * radius * Math.PI / 180;
+		double z = destination.getAltitude() - alt;
+		
+		return new Point3DCart(x, y, z);
+	}
+	
+	public class Point3DCart {
+		public double x, y, z;
+		
+		public Point3DCart(double d, double e, double f){
+			x = d;
+			z = e;
+			z = f;
+		}
 	}
 }

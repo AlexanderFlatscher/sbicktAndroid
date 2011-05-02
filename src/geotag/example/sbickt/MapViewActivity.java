@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import sun.util.logging.resources.logging;
+
 import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -15,6 +17,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
@@ -30,7 +33,7 @@ public class MapViewActivity extends MapActivity {
 	private final int GPS_REFRESH_DISTANCE_IN_M = 50;
 
 	private MapView mapView;
-	private MyLocationOverlay myLocationOverlay;
+	//private MyLocationOverlay myLocationOverlay;
 	private SbicktMessagesOverlay sbicktMessagesOverlay;
 
 	private Drawable sbicktMessageDrawable;
@@ -53,21 +56,15 @@ public class MapViewActivity extends MapActivity {
 	}
 	
 	@Override
-	protected void onStart() {
-		super.onStart();
-		
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_REFRESH_TIME_IN_MS, GPS_REFRESH_DISTANCE_IN_M, locationListener);
-	}
-	
-	@Override
 	protected void onResume() {
 		super.onResume();
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_REFRESH_TIME_IN_MS, GPS_REFRESH_DISTANCE_IN_M, locationListener);
 		new InitSbicktMessageOverlay().execute(currentLocation);
 	}
 	
 	@Override
-	protected void onStop() {
-		super.onStop();
+	protected void onPause() {
+		super.onPause();
 		
 		locationManager.removeUpdates(locationListener);
 	}
@@ -78,13 +75,18 @@ public class MapViewActivity extends MapActivity {
 		
 		locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
 		currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		//String test = currentLocation.toString();
+		if(currentLocation != null)
+			Log.v("alex", currentLocation.toString());
+		else
+			Log.v("alex", "no current location");
 	}
 	
-	private void initMyLocationOverlay(){
+	/*private void initMyLocationOverlay(){
 		myLocationOverlay = new MyLocationOverlay(this, mapView);
 		myLocationOverlay.enableMyLocation();
 		mapView.getOverlays().add(myLocationOverlay);
-	}
+	}*/
 
 	@Override
 	protected boolean isRouteDisplayed() {
@@ -102,6 +104,7 @@ public class MapViewActivity extends MapActivity {
 		public void onLocationChanged(Location location) {
 			new UpdateSbicktMessageOverlay().execute(location);
 			currentLocation = location;
+			Log.v("alex", location.toString());
 		}
 	};
 	
@@ -116,6 +119,7 @@ public class MapViewActivity extends MapActivity {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
 			return geoTags;
 		}
 		
@@ -125,15 +129,16 @@ public class MapViewActivity extends MapActivity {
 				Toast.makeText(getBaseContext(), "no messages received", Toast.LENGTH_LONG).show();
 			}
 			else {				
+				Toast.makeText(getBaseContext(), "received: " + result.size() + " messages", Toast.LENGTH_LONG).show();
 				List<Overlay> overlays = mapView.getOverlays();
 				overlays.clear();
 				
 				sbicktMessagesOverlay.clear();
 				
 				for(GeoTag g : result){
-					GeoPoint point = new GeoPoint((int) (g.getX() * 1E6), (int) (g.getY() * 1E6));
+					GeoPoint point = new GeoPoint((int) (g.getLat() * 1E6), (int) (g.getLng() * 1E6));
 					OverlayItem overlayItem = new OverlayItem(point, g.getOwner(), g.getContent());
-					
+					Log.v("alex", g.coordinatesToString());
 					sbicktMessagesOverlay.addOverlay(overlayItem);
 				}
 				

@@ -38,8 +38,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import android.util.Log;
-
 public class KmlParser {
 	private DocumentBuilderFactory dbf;
 	private DocumentBuilder db;
@@ -56,13 +54,12 @@ public class KmlParser {
 	}
 	
 	public void requestKml(String protocol, String host, int port, String folder) throws Exception{
+
 		try {
-			
 			kml = db.parse(new URL(protocol, host, port, folder).openConnection().getInputStream());
 			kml.getDocumentElement().normalize();
 		}
 		catch (Exception e) {
-			Log.v("alex", e.toString());
 			throw new Exception("KmlParser -> requestKml: " + e);
 		}
 	}

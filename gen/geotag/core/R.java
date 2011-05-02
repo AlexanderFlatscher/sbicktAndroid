@@ -77,6 +77,7 @@ public final class R {
         public static final int friends=0x7f070019;
         public static final int in=0x7f070012;
         public static final int live_view=0x7f070014;
+        public static final int live_view_messages_overlay=0x7f07000e;
         public static final int main=0x7f07000d;
         public static final int map_view=0x7f070013;
         public static final int maplayout=0x7f070010;
@@ -98,7 +99,6 @@ public final class R {
         public static final int sbicktmenu=0x7f070022;
         public static final int screenshot=0x7f070015;
         public static final int search_friends=0x7f07000f;
-        public static final int surface=0x7f07000e;
     }
     public static final class layout {
         public static final int archive_view=0x7f030000;
@@ -110,9 +110,12 @@ public final class R {
         public static final int main=0x7f030006;
         public static final int map_view=0x7f030007;
         public static final int menu=0x7f030008;
-        public static final int menu_live_view=0x7f030009;
-        public static final int menu_map_view=0x7f03000a;
-        public static final int profile_view=0x7f03000b;
+        public static final int menu_in=0x7f030009;
+        public static final int menu_live_view=0x7f03000a;
+        public static final int menu_map_view=0x7f03000b;
+        public static final int menu_out=0x7f03000c;
+        public static final int profile_view=0x7f03000d;
+        public static final int sbickerl=0x7f03000e;
     }
     public static final class menu {
         public static final int sbicktmenu=0x7f060000;

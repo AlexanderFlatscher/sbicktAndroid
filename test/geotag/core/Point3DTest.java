@@ -37,9 +37,9 @@ public class Point3DTest {
 	public void testPoint3D() {
 		Point3D coordinates = new Point3D(0.0, 1.0, 2.0);
 		
-		assertEquals(0, coordinates.x, 0);
-		assertEquals(1, coordinates.y, 0);
-		assertEquals(2, coordinates.z, 0);
+		assertEquals(0, coordinates.lat, 0);
+		assertEquals(1, coordinates.lng, 0);
+		assertEquals(2, coordinates.alt, 0);
 	}
 
 }

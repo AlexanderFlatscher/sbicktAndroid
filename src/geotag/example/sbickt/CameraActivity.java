@@ -27,72 +27,156 @@
 
 package geotag.example.sbickt;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.Overlay;
+import com.google.android.maps.OverlayItem;
+
+import geotag.core.GeoTag;
+import geotag.core.Point3D;
 import geotag.core.R;
-
-import java.io.IOException;
-
 import android.app.Activity;
-import android.graphics.PixelFormat;
-import android.hardware.Camera;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 
-public class CameraActivity extends Activity implements SurfaceHolder.Callback {
+public class CameraActivity extends Activity {
 	
-	private Camera mCamera;
-	private SurfaceHolder mSurfaceHolder;
-	private SurfaceView mSurfaceView;
-	private boolean mPreviewRunning;
+	private static final int GPS_REFRESH_TIME_IN_MS = 60000;
+	private static final int GPS_REFRESH_DISTANCE_IN_M = 50;
+	
+	private CameraViewMessagesOverlay messagesOverlay;
+
+	private LocationManager locationManager;
+
+	private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    
+    private Location currentLocation;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getWindow().setFormat(PixelFormat.TRANSLUCENT);
+		//getWindow().setFormat(PixelFormat.TRANSLUCENT);
 
 		setContentView(R.layout.camera_view);
-		
 		((ImageButton) findViewById(R.id.live_view)).setVisibility(View.INVISIBLE);
-				
-		mSurfaceView = (SurfaceView) findViewById(R.id.surface);
+		messagesOverlay = (CameraViewMessagesOverlay) findViewById(R.id.live_view_messages_overlay);
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		
-		mSurfaceHolder = mSurfaceView.getHolder();
-		mSurfaceHolder.addCallback(this);
-		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 	}
-
-	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-		if(mPreviewRunning)
-			mCamera.stopPreview();
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_REFRESH_TIME_IN_MS, GPS_REFRESH_DISTANCE_IN_M, locationListener);
+		mSensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 		
-		Camera.Parameters p = mCamera.getParameters();
-		//p.setPreviewSize(width, height);
-		mCamera.setParameters(p);
+		currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		new InitSbicktMessages().execute(currentLocation);
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		locationManager.removeUpdates(locationListener);
+		mSensorManager.unregisterListener(sensorEventListener);
+	}
+	
+	private final LocationListener locationListener = new LocationListener() {
 		
-		try {
-			mCamera.setPreviewDisplay(mSurfaceHolder);
-		} catch (IOException e) {
-			e.printStackTrace();
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+			// TODO warning message: GPS not available (maybe because of the building you are in...)
 		}
 		
-		mCamera.startPreview();
-		mPreviewRunning = true;
+		public void onProviderEnabled(String provider) {}
 		
-	}
-
-	public void surfaceCreated(SurfaceHolder holder) {
-		mCamera = Camera.open();
+		public void onProviderDisabled(String provider) {
+			// TODO error message: GPS not enabled
+		}
 		
-	}
+		public void onLocationChanged(Location location) {
+			new UpdateSbicktMessages().execute(location);
+			currentLocation = location;
+			// TODO execute run with new location; download new messages from server
+		}
+	};
+	
+	private final SensorEventListener sensorEventListener = new SensorEventListener() {
+		
+		public void onSensorChanged(SensorEvent event) {
+			messagesOverlay.invalidate();
+			//Log.v("alex", "x: " + event.values[0]/SensorManager.GRAVITY_EARTH + " y: " + event.values[1]/SensorManager.GRAVITY_EARTH + " z: " + event.values[2]/SensorManager.GRAVITY_EARTH);
+			
+		}
+		
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+			// TODO Auto-generated method stub
+			
+		}
+	};
+	
+	private class UpdateSbicktMessages extends AsyncTask<Location, Void, Queue<GeoTag>>{
 
-	public void surfaceDestroyed(SurfaceHolder holder) {
-		mCamera.stopPreview();
-		mPreviewRunning = false;
-		mCamera.release();
+		@Override
+		protected Queue<GeoTag> doInBackground(Location... params) {
+			Queue<GeoTag> geoTags = new LinkedList<GeoTag>();
+			
+			try {
+				geoTags = SbicktAPI.getGeoTags(new Point3D(params[0]));
+				Log.v("alex", geoTags.toString());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return geoTags;
+		}
+		
+		@Override
+		protected void onPostExecute(Queue<GeoTag> result) {
+			if(result.isEmpty()){
+				Toast.makeText(getBaseContext(), "no messages received", Toast.LENGTH_LONG).show();
+			}
+			else {
+				// TODO add messages to camera view messages overlay
+			}
+		}
 		
 	}
 	
+	private class InitSbicktMessages extends UpdateSbicktMessages {
+
+		private ProgressDialog sbicktMessagesDialog = new ProgressDialog(CameraActivity.this);
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			sbicktMessagesDialog.setMessage("lade s'bickt Nachrichten...");
+			sbicktMessagesDialog.show();
+		}
+		
+		@Override
+		protected void onPostExecute(Queue<GeoTag> result) {
+			super.onPostExecute(result);
+			sbicktMessagesDialog.dismiss();
+		}
+		
+	}
 }

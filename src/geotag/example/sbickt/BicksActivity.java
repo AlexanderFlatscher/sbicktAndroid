@@ -43,6 +43,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -60,12 +61,25 @@ public class BicksActivity extends Activity {
 	private RadioButton radioButtonPrivate, radioButtonFriends, radioButtonPublic;
 	private LocationManager locationManager;
 	private Location currentLocation;
+	private List<NameValuePair> myData;
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bicks_view);
+		myData = new ArrayList<NameValuePair>();
+
+		myData.add(new BasicNameValuePair("nickname", "isi"));
+		myData.add(new BasicNameValuePair("password", "sbickt"));
+		
+//		try {
+//			SbicktAPI.login(myData);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			Log.v("alex", e.toString());
+//			Toast.makeText(getBaseContext(), "failed to login", Toast.LENGTH_LONG).show();
+//		}
 		
 		Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/LiteraEF-Medium.otf");		editTextBicks = (EditText) findViewById(R.id.edit_text_bicks);
 		buttonBicks = (ImageButton) findViewById(R.id.button_bicks);

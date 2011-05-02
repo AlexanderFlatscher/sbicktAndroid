@@ -14,7 +14,7 @@ public class Properties {
 	public static final int URL_PORT = 80;
 	
 	public static final String getUrl(){
-		return URL_PROTOCOL + "://" + URL_HOST;// + ":" + Integer.toString(URL_PORT);
+		return URL_PROTOCOL + "://" + URL_HOST; //+ ":" + Integer.toString(URL_PORT);
 	}
 	
 	public static final String getUrlIndex(){

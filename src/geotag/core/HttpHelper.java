@@ -145,6 +145,7 @@ public class HttpHelper {
 		
 		for (Header h : headers) {
 			if (h.getName().equalsIgnoreCase("Location")) {
+
 				if (h.getValue().equalsIgnoreCase(ignoreCase) || h.getValue().equalsIgnoreCase(Properties.getUrl() + "/index.html#section_wo")) {
 					return;
 				}

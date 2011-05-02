@@ -27,8 +27,8 @@
 
 package geotag.example.sbickt;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import geotag.core.GeoTag;
 import geotag.core.Point3D;
 
@@ -96,19 +96,19 @@ public class SbicktAPITest {
 		}
 	}
 	
-	@Test
-	public void testDeleteGeoTag(){
-		Queue<GeoTag> listOfGeoTags = new LinkedList<GeoTag>();
-		
-		try {
-			listOfGeoTags = SbicktAPI.getGeoTags(new Point3D(2.548, 2.548, 0));
-
-			while(!listOfGeoTags.isEmpty()){
-				SbicktAPI.deleteGeoTag(listOfGeoTags.poll().getId());
-			}
-		}
-		catch (Exception e) {
-			fail(e.toString());
-		}
-	}
+//	@Test
+//	public void testDeleteGeoTag(){
+//		Queue<GeoTag> listOfGeoTags = new LinkedList<GeoTag>();
+//		
+//		try {
+//			listOfGeoTags = SbicktAPI.getGeoTags(new Point3D(2.548, 2.548, 0));
+//
+//			while(!listOfGeoTags.isEmpty()){
+//				SbicktAPI.deleteGeoTag(listOfGeoTags.poll().getId());
+//			}
+//		}
+//		catch (Exception e) {
+//			fail(e.toString());
+//		}
+//	}
 }

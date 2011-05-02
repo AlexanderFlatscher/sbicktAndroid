@@ -74,44 +74,44 @@ public class GeoTag {
 		this.visibility = visibility;
 	}
 
-	public void setX(Double x){
-		if(x == coordinates.x){
+	public void setLat(Double lat){
+		if(lat == coordinates.lat){
 			return;
 		}
 		
-		coordinates.x = x;
+		coordinates.lat = lat;
 	}
 	
-	public Double getX(){
-		return coordinates.x;
+	public Double getLat(){
+		return coordinates.lat;
 	}
 	
-	public void setY(Double y){
-		if(y == coordinates.y){
+	public void setLng(Double lng){
+		if(lng == coordinates.lng){
 			return;
 		}
 		
-		coordinates.y = y;
+		coordinates.lng = lng;
 	}
 	
-	public Double getY(){
-		return coordinates.y;
+	public Double getLng(){
+		return coordinates.lng;
 	}
 	
-	public void setZ(Double z){
-		if(z == coordinates.z){
+	public void setAlt(Double alt){
+		if(alt == coordinates.alt){
 			return;
 		}
 		
-		coordinates.z = z;
+		coordinates.alt = alt;
 	}
 	
-	public Double getZ(){
-		return coordinates.z;
+	public Double getAlt(){
+		return coordinates.alt;
 	}
 	
 	public String coordinatesToString(){
-		return "X: " + coordinates.x + ", Y: " + coordinates.y + ", Z: " + coordinates.z;
+		return "lat: " + coordinates.lat + ", lng: " + coordinates.lng + ", alt: " + coordinates.alt;
 	}
 
 	public void setOwner(String owner) {

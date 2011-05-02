@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/in"
+	android:layout_alignParentBottom="true"
+	android:layout_alignParentRight="true"
+	android:layout_height="fill_parent"
+	android:layout_width="fill_parent"
+	android:padding="10dp">
+	
+	<ImageButton android:id="@+id/map_view"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true"
+		android:src="@drawable/button_menu_map_view"
+		android:background="@null"
+		android:scaleType="fitCenter"
+		android:layout_height="@dimen/icon_size"
+		android:layout_width="@dimen/icon_size">
+	</ImageButton>
+	
+	<ImageButton android:id="@+id/live_view"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true"
+		android:src="@drawable/button_menu_live_view"
+		android:background="@null"
+		android:scaleType="fitCenter"
+		android:layout_height="@dimen/icon_size"
+		android:layout_width="@dimen/icon_size">
+	</ImageButton>
+	
+	<ImageButton android:id="@+id/screenshot"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentRight="true"
+		android:src="@drawable/button_menu_screenshot"
+		android:background="@null"
+		android:scaleType="fitCenter"
+		android:layout_height="@dimen/icon_size"
+		android:layout_width="@dimen/icon_size">
+	</ImageButton>
+	
+	<ImageButton android:id="@+id/menu_in"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:src="@drawable/button_menu_in"
+		android:background="@null"
+		android:scaleType="fitCenter"
+		android:layout_height="@dimen/icon_height"
+		android:layout_width="@dimen/icon_width">
+	</ImageButton>
+	
+</RelativeLayout>

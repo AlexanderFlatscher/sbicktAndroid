@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-	<!-- used debug certificate to optain apiKey. has to be changed before publishing -->
+	<!-- used debug certificate to obtain apiKey. has to be changed before publishing -->
 	<com.google.android.maps.MapView
 		android:id="@+id/mapview"
 		android:layout_width="fill_parent"
