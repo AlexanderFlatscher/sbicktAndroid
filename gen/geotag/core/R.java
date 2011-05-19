@@ -64,15 +64,15 @@ public final class R {
     }
     public static final class id {
         public static final int archive=0x7f07001a;
-        public static final int archive_list=0x7f070000;
+        public static final int archive_list=0x7f070003;
         public static final int background_left=0x7f070004;
         public static final int background_right=0x7f070005;
         public static final int bicks=0x7f07001b;
         public static final int button_back=0x7f070006;
         public static final int button_bicks=0x7f070008;
-        public static final int category_friends=0x7f070002;
-        public static final int category_private=0x7f070001;
-        public static final int category_public=0x7f070003;
+        public static final int category_friends=0x7f070001;
+        public static final int category_private=0x7f070000;
+        public static final int category_public=0x7f070002;
         public static final int edit_text_bicks=0x7f070007;
         public static final int friends=0x7f070019;
         public static final int in=0x7f070012;
@@ -101,21 +101,22 @@ public final class R {
         public static final int search_friends=0x7f07000f;
     }
     public static final class layout {
-        public static final int archive_view=0x7f030000;
-        public static final int background=0x7f030001;
-        public static final int bicks_view=0x7f030002;
-        public static final int camera_view=0x7f030003;
-        public static final int friends_list_item=0x7f030004;
-        public static final int friends_view=0x7f030005;
-        public static final int main=0x7f030006;
-        public static final int map_view=0x7f030007;
-        public static final int menu=0x7f030008;
-        public static final int menu_in=0x7f030009;
-        public static final int menu_live_view=0x7f03000a;
-        public static final int menu_map_view=0x7f03000b;
-        public static final int menu_out=0x7f03000c;
-        public static final int profile_view=0x7f03000d;
-        public static final int sbickerl=0x7f03000e;
+        public static final int archive_list_item=0x7f030000;
+        public static final int archive_view=0x7f030001;
+        public static final int background=0x7f030002;
+        public static final int bicks_view=0x7f030003;
+        public static final int camera_view=0x7f030004;
+        public static final int friends_list_item=0x7f030005;
+        public static final int friends_view=0x7f030006;
+        public static final int main=0x7f030007;
+        public static final int map_view=0x7f030008;
+        public static final int menu=0x7f030009;
+        public static final int menu_in=0x7f03000a;
+        public static final int menu_live_view=0x7f03000b;
+        public static final int menu_map_view=0x7f03000c;
+        public static final int menu_out=0x7f03000d;
+        public static final int profile_view=0x7f03000e;
+        public static final int sbickerl=0x7f03000f;
     }
     public static final class menu {
         public static final int sbicktmenu=0x7f060000;

@@ -58,9 +58,9 @@ public class SbicktAPI {
 		}
 	}
 	
-	public static Queue<GeoTag> getGeoTags(Point3D me) throws Exception{
+	public static LinkedList<GeoTag> getGeoTags(Point3D me) throws Exception{
 		KmlParser kp = new KmlParser();
-		Queue<GeoTag> listOfGeoTags = new LinkedList<GeoTag>();
+		LinkedList<GeoTag> listOfGeoTags = new LinkedList<GeoTag>();
 		Exception up = new Exception("SbicktAPI -> getGeoTags: No data from server");
 		
 		kp.requestKml(Properties.URL_PROTOCOL, Properties.URL_HOST, Properties.URL_PORT, Properties.URL_FOLDER_LIST + "?lat=" + me.lat + "&lng=" + me.lng);

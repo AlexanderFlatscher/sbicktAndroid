@@ -64,13 +64,13 @@ public class KmlParser {
 		}
 	}
 
-	public Queue<GeoTag> generateObjects(){
+	public LinkedList<GeoTag> generateObjects(){
 		String user, content, coordinates;
 		Integer id;
 		TagVisibility visibility;
 		double[] geoData = new double[3];
 		Element listElement;
-		Queue<GeoTag> listOfGeoTags = new LinkedList<GeoTag>();
+		LinkedList<GeoTag> listOfGeoTags = new LinkedList<GeoTag>();
 		Element pointElement;
 		NodeList objectList = kml.getElementsByTagName("Placemark");
 

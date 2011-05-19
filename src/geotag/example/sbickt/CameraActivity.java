@@ -38,6 +38,7 @@ import com.google.android.maps.OverlayItem;
 import geotag.core.GeoTag;
 import geotag.core.Point3D;
 import geotag.core.R;
+import geotag.core.Vector3D;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -67,6 +68,7 @@ public class CameraActivity extends Activity {
 
 	private SensorManager mSensorManager;
     private Sensor mAccelerometer;
+    private Sensor mOrientation;
     
     private Location currentLocation;
 	
@@ -82,23 +84,27 @@ public class CameraActivity extends Activity {
 		
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mOrientation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_REFRESH_TIME_IN_MS, GPS_REFRESH_DISTANCE_IN_M, locationListener);
-		mSensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		mSensorManager.registerListener(accelerometerEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		mSensorManager.registerListener(orientationEventListener, mOrientation, SensorManager.SENSOR_DELAY_NORMAL);
 		
 		currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		new InitSbicktMessages().execute(currentLocation);
+		messagesOverlay.phoneLocation = new Vector3D(new Point3D(currentLocation));
+		//new InitSbicktMessages().execute(currentLocation);
 	}
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
 		locationManager.removeUpdates(locationListener);
-		mSensorManager.unregisterListener(sensorEventListener);
+		mSensorManager.unregisterListener(accelerometerEventListener);
 	}
 	
 	private final LocationListener locationListener = new LocationListener() {
@@ -114,24 +120,31 @@ public class CameraActivity extends Activity {
 		}
 		
 		public void onLocationChanged(Location location) {
-			new UpdateSbicktMessages().execute(location);
+			//new UpdateSbicktMessages().execute(location);
 			currentLocation = location;
+			messagesOverlay.phoneLocation = new Vector3D(new Point3D(currentLocation));
 			// TODO execute run with new location; download new messages from server
 		}
 	};
 	
-	private final SensorEventListener sensorEventListener = new SensorEventListener() {
+	private final SensorEventListener accelerometerEventListener = new SensorEventListener() {
 		
 		public void onSensorChanged(SensorEvent event) {
-			messagesOverlay.invalidate();
-			//Log.v("alex", "x: " + event.values[0]/SensorManager.GRAVITY_EARTH + " y: " + event.values[1]/SensorManager.GRAVITY_EARTH + " z: " + event.values[2]/SensorManager.GRAVITY_EARTH);
-			
+			//Log.v("alex", "acceleration x: " + event.values[0] + " y: " + event.values[1] + " z: " + event.values[2]);
+			messagesOverlay.accelVector = new Vector3D(event.values);
 		}
 		
-		public void onAccuracyChanged(Sensor sensor, int accuracy) {
-			// TODO Auto-generated method stub
-			
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+	};
+	
+	private final SensorEventListener orientationEventListener = new SensorEventListener() {
+		
+		public void onSensorChanged(SensorEvent event) {
+			Log.v("alex", "orientation azimuth: " + event.values[0] + " pitch: " + event.values[1] + " roll: " + event.values[2]);
+			messagesOverlay.heading = event.values[0];
 		}
+		
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 	};
 	
 	private class UpdateSbicktMessages extends AsyncTask<Location, Void, Queue<GeoTag>>{
@@ -156,6 +169,10 @@ public class CameraActivity extends Activity {
 			}
 			else {
 				// TODO add messages to camera view messages overlay
+				messagesOverlay.clear();
+				for(GeoTag g : result){
+					messagesOverlay.add(g);
+				}
 			}
 		}
 		

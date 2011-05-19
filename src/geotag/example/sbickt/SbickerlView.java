@@ -1,15 +1,18 @@
 package geotag.example.sbickt;
 
+import geotag.core.GeoTag;
 import geotag.core.Point3D;
 import geotag.core.R;
+import geotag.core.Vector3D;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
 public class SbickerlView extends RelativeLayout {
-
-	private double x = 0, y = 0, z = 0;
+	
+	public GeoTag content;
+	public Vector3D worldDirection, phoneDirection, screenPosition;
 	// TODO add text...
 	
 	public SbickerlView(Context context) {
@@ -30,30 +33,6 @@ public class SbickerlView extends RelativeLayout {
 	private void init(Context context){
 		LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.sbickerl, this, true);
-	}
-
-	public double getX() {
-		return x;
-	}
-
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	public double getY() {
-		return y;
-	}
-
-	public void setY(double y) {
-		this.y = y;
-	}
-
-	public double getZ() {
-		return z;
-	}
-
-	public void setZ(double z) {
-		this.z = z;
 	}
 
 }
