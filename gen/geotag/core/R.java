@@ -84,7 +84,7 @@ public final class R {
         public static final int mapview=0x7f070011;
         public static final int menu_in=0x7f070016;
         public static final int menu_out=0x7f07001c;
-        public static final int newPost=0x7f070023;
+        public static final int newPost=0x7f070024;
         public static final int out=0x7f070017;
         public static final int profile=0x7f070018;
         public static final int profile_delete_button=0x7f070021;
@@ -96,7 +96,8 @@ public final class R {
         public static final int radio_category_private=0x7f07000a;
         public static final int radio_category_public=0x7f07000c;
         public static final int radio_group_category=0x7f070009;
-        public static final int sbicktmenu=0x7f070022;
+        public static final int sbickerl_text_view=0x7f070022;
+        public static final int sbicktmenu=0x7f070023;
         public static final int screenshot=0x7f070015;
         public static final int search_friends=0x7f07000f;
     }

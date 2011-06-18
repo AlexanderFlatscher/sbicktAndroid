@@ -16,6 +16,12 @@ public class Matrix3D {
 		this.c = new Vector3D(c);
 	}
 	
+	public Matrix3D(Vector3D a, Vector3D b, Vector3D c){
+		this.a = a;
+		this.b = b;
+		this.c = c;
+	}
+	
 	public Matrix3D(Matrix3D m2){
 		this.a = m2.a;
 		this.b = m2.b;
@@ -26,8 +32,18 @@ public class Matrix3D {
 		return new double[][] {{a.x, b.x, c.x},{a.y, b.y, c.y},{a.z, b.z, c.z}};
 	}
 	
-	public void transponse(){
+	public Matrix3D transpose(){
 		Matrix3D temp = new Matrix3D(this);
+		
+		this.a = new Vector3D(temp.a.x, temp.b.x, temp.c.x);
+		this.b = new Vector3D(temp.a.y, temp.b.y, temp.c.y);
+		this.c = new Vector3D(temp.a.z, temp.b.z, temp.c.z);
+		
+		return this;
+	}
+	
+	public Vector3D transformVector(Vector3D vector){
+		return new Vector3D(a.dot(vector), b.dot(vector), c.dot(vector));
 		
 	}
 

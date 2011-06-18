@@ -27,18 +27,14 @@
 
 package geotag.example.sbickt;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
-
 import geotag.core.GeoTag;
 import geotag.core.Point3D;
 import geotag.core.R;
 import geotag.core.Vector3D;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -75,7 +71,18 @@ public class CameraActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getWindow().
 		//getWindow().setFormat(PixelFormat.TRANSLUCENT);
+		
+//		List<NameValuePair> myData = new ArrayList<NameValuePair>();
+//
+//		myData.add(new BasicNameValuePair("nickname", "isi"));
+//		myData.add(new BasicNameValuePair("password", "sbickt"));
+//		
+//		try {
+//			SbicktAPI.login(myData);
+//		}
+//		catch (Exception e) {}
 
 		setContentView(R.layout.camera_view);
 		((ImageButton) findViewById(R.id.live_view)).setVisibility(View.INVISIBLE);
@@ -96,8 +103,11 @@ public class CameraActivity extends Activity {
 		mSensorManager.registerListener(orientationEventListener, mOrientation, SensorManager.SENSOR_DELAY_NORMAL);
 		
 		currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		messagesOverlay.phoneLocation = new Vector3D(new Point3D(currentLocation));
-		//new InitSbicktMessages().execute(currentLocation);
+		if(currentLocation != null){
+			Toast.makeText(getBaseContext(), "currentlocation: " + currentLocation.toString(), Toast.LENGTH_LONG).show();
+		
+			new InitSbicktMessages().execute(currentLocation);
+		}
 	}
 	
 	@Override
@@ -122,7 +132,7 @@ public class CameraActivity extends Activity {
 		public void onLocationChanged(Location location) {
 			//new UpdateSbicktMessages().execute(location);
 			currentLocation = location;
-			messagesOverlay.phoneLocation = new Vector3D(new Point3D(currentLocation));
+			messagesOverlay.calculateSbickerlWorldDirection(new Point3D(currentLocation));
 			// TODO execute run with new location; download new messages from server
 		}
 	};
@@ -130,7 +140,7 @@ public class CameraActivity extends Activity {
 	private final SensorEventListener accelerometerEventListener = new SensorEventListener() {
 		
 		public void onSensorChanged(SensorEvent event) {
-			//Log.v("alex", "acceleration x: " + event.values[0] + " y: " + event.values[1] + " z: " + event.values[2]);
+			Log.v("accel", "acceleration x: " + event.values[0] + " y: " + event.values[1] + " z: " + event.values[2]);
 			messagesOverlay.accelVector = new Vector3D(event.values);
 		}
 		
@@ -140,7 +150,7 @@ public class CameraActivity extends Activity {
 	private final SensorEventListener orientationEventListener = new SensorEventListener() {
 		
 		public void onSensorChanged(SensorEvent event) {
-			Log.v("alex", "orientation azimuth: " + event.values[0] + " pitch: " + event.values[1] + " roll: " + event.values[2]);
+			Log.v("orient", "orientation azimuth: " + event.values[0] + " pitch: " + event.values[1] + " roll: " + event.values[2]);
 			messagesOverlay.heading = event.values[0];
 		}
 		
@@ -155,7 +165,7 @@ public class CameraActivity extends Activity {
 			
 			try {
 				geoTags = SbicktAPI.getGeoTags(new Point3D(params[0]));
-				Log.v("alex", geoTags.toString());
+				//Log.v("alex", geoTags.toString());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -173,6 +183,9 @@ public class CameraActivity extends Activity {
 				for(GeoTag g : result){
 					messagesOverlay.add(g);
 				}
+				Toast.makeText(getBaseContext(), "received " + result.size() + " elements", Toast.LENGTH_LONG).show();
+				messagesOverlay.calculateSbickerlWorldDirection(new Point3D(currentLocation));
+				messagesOverlay.start();
 			}
 		}
 		
@@ -193,6 +206,7 @@ public class CameraActivity extends Activity {
 		protected void onPostExecute(Queue<GeoTag> result) {
 			super.onPostExecute(result);
 			sbicktMessagesDialog.dismiss();
+			
 		}
 		
 	}

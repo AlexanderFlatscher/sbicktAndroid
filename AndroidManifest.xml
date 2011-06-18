@@ -9,9 +9,10 @@
     	android:theme="@android:style/Theme.Light.NoTitleBar"
     	android:debuggable="true">
         
-        <activity android:name="geotag.example.sbickt.ArchiveActivity"
+        <activity android:name="geotag.example.sbickt.CameraActivity"
                   android:label="@string/app_name"
-                  android:screenOrientation="landscape">
+                  android:screenOrientation="landscape"
+                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
                   
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +34,7 @@
         <activity android:name="geotag.example.sbickt.FriendsActivity"
                   android:screenOrientation="landscape" />
         
-        <activity android:name="geotag.example.sbickt.CameraActivity"
+        <activity android:name="geotag.example.sbickt.ArchiveActivity"
                   android:screenOrientation="landscape" />
                   
         

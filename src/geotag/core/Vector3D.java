@@ -20,12 +20,20 @@ public class Vector3D {
 		this.z = a[2];
 	}
 	
-	public Vector3D(Point3D point){
-		double radius = 6371000.785 + point.alt;
+//	public Vector3D(Point3D point){
+//		double radius = 6371000.785 + point.alt;
+//		
+//		this.x = (double) (radius * Math.cos(point.lat) * Math.cos(point.lng));
+//		this.y = (double) (radius * Math.cos(point.lat) * Math.sin(point.lng));
+//		this.z = (double) (radius * Math.sin(point.lat));
+//	}
+	
+	public Vector3D(Point3D from, Point3D to){
+		double radius = 6371000.785;
 		
-		this.x = (double) (radius * Math.cos(point.lat) * Math.cos(point.lng));
-		this.y = (double) (radius * Math.cos(point.lat) * Math.sin(point.lng));
-		this.z = (double) (radius * Math.sin(point.lat));
+		this.x = (to.lng - from.lng) * radius * Math.PI / 180;
+		this.y = (to.lat - from.lng) * radius * Math.PI / 180;
+		this.z = to.alt - from.alt;
 	}
 	
 	public Vector3D(float[] a) {
@@ -44,7 +52,16 @@ public class Vector3D {
 	
 	public double dot(Vector3D v){
 		return x * v.x + y * v.y + z * v.z;
+	}
+	
+	public Vector3D mul(double k){
+		Vector3D a = new Vector3D();
 		
+		a.x = x * k;
+		a.y = y * k;
+		a.z = z * k;
+		
+		return a;
 	}
 	
 	public Vector3D div(double k){

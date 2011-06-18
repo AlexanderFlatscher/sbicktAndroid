@@ -113,6 +113,10 @@ public class GeoTag {
 	public String coordinatesToString(){
 		return "lat: " + coordinates.lat + ", lng: " + coordinates.lng + ", alt: " + coordinates.alt;
 	}
+	
+	public Point3D getCoordinates(){
+		return coordinates;
+	}
 
 	public void setOwner(String owner) {
 		if(owner == this.owner){
